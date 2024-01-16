@@ -1,0 +1,177 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+{% block content %}
+
+<!--app-content open-->
+<div class="main-content app-content mt-0">
+    <div class="side-app">
+
+        <!-- CONTAINER -->
+        <div class="main-container container-fluid">
+
+            <!-- PAGE-HEADER -->
+            <div class="page-header">
+                <h1 class="page-title">Short Term Course Create</h1>
+                <a href="" class="btn btn-danger btn-pill">View</a>
+
+            </div>
+            <!-- PAGE-HEADER END -->
+            <form action="{{url}}" method="POST" enctype="multipart/form-data" class="ajax redirect">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- IMAGE UPLOADER -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Image Upload</h3>
+                            </div>
+                            <div class=" card-body">
+                                <div class="row mb-5">
+                                    <div class="col-lg-12 col-sm-12 mb-4 mb-lg-0">
+                                        {{form.image}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- IMAGE UPLOADER end -->
+
+                    <!-- DETAILS START -->
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Short Term Course Information</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+
+                                    <!--  Title -->
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label"> Title</label>
+                                            {{form.title}}
+                                        </div>
+                                    </div>
+                                    <!--  Subtitle -->
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Subtitle</label>
+                                            {{form.subtitle}}
+                                        </div>
+                                    </div>
+
+                                    <!-- Description -->
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="form-label">Description</label>
+                                            {{form.description}}
+                                        </div>
+                                    </div>
+
+                                    <!--  Amount -->
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label"> MRP</label>
+                                            {{form.mrp}}
+                                        </div>
+                                    </div>
+                                    <!--  Subtitle -->
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Price</label>
+                                            {{form.price}}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="multi-field-wrapper course_details_formset">
+                                            {% for item in course_details_formset.forms %}
+                                            <div class="multi-fields course_details_formset">
+                                                <div class="multi-field">
+                                                    <div class="row">
+                                                        <div class="col-lg-6" style="padding-right:0px">
+                                                            <div class="form-group">
+                                                                <label>Title</label>
+                                                                {{item.title}}
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-6" style="padding-right:0px">
+                                                            <div class="form-group">
+                                                                <label>Description</label>
+                                                                {{item.description}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button"class="remove-field float-right btn btn-danger btn-sm icon-btn ml-2 "><i class="mdi mdi-delete"></i></button>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                            <div>
+                                                <button type="button" class=" add-field btn btn-info btn-sm icon-btn ml-2 mb-2"> Add New<i class="mdi mdi-plus"></i> </button>
+                                            </div>
+                                            {{ course_details_formset.management_form }}
+                                        </div>
+                                    </div>
+                                    <!-- status -->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="form-label">Status</label>
+                                            {{form.status}}
+                                        </div>
+                                    </div>
+                                    <!-- SUBMIT START -->
+                                    <div class="col-lg-12 ">
+                                        <div class="mt-5">
+                                            <a href="" class="btn btn-default btn-pill">Cancel</a>
+                                            <button type="submit" class="btn btn-warning btn-pill">Submit</button>
+                                        </div>
+                                    </div>
+                                     <!-- SUBMIT END -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- DETAILS END -->
+                </div>
+        </div>
+        </form>
+
+
+    </div>
+    <!-- CONTAINER END -->
+</div>
+</div>
+<!--app-content close-->
+
+{% endblock content %}
+{% block static %}
+    {% load static %}
+    {{form.media}}
+    <script>
+        $(document).ready(function () {
+            $('.course_details_formset multi-fields multi-field').formset({
+                prefix: '{{ course_details_formset.prefix }}',
+                formCssClass: 'dynamic-formset',
+
+                'added': function (row) {
+                    
+                },
+            });
+        });
+    </script>
+{% comment %} <script>
+    $('.multi-field-wrapper').each(function () {
+      var $wrapper = $('.multi-fields', this);
+      $(".add-field", $(this)).click(function (e) {
+        $('.multi-field:first-child', $wrapper).clone(true).appendTo($wrapper).find('input,textarea').val('')
+          .focus();
+      });
+      $('.multi-field .remove-field', $wrapper).click(function () {
+        if ($('.multi-field', $wrapper).length > 1)
+          $(this).parent('.multi-field').remove();
+      });
+    });
+  </script> {% endcomment %}
+
+  {% endblock  %}

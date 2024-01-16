@@ -1,0 +1,247 @@
+{% extends 'admin_panel/base.html' %}
+{% load static %}
+{% block content %}
+<!--app-content open-->
+<div class="main-content app-content mt-0">
+    <div class="side-app">
+
+        <!-- CONTAINER -->
+        <div class="main-container container-fluid">
+
+            <!-- PAGE-HEADER -->
+            <div class="page-header">
+                <h1 class="page-title">Short Term Course View</h1>
+                <a href="{% url 'courses:create_course' %}" class="btn btn-danger btn-pill">Add <i class="fa fa-plus"></i></a>
+
+            </div>
+            <!-- PAGE-HEADER END -->
+
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Short Term Course Table</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="table-responsive">
+                                <div class="table-responsive">
+                                    <table class="table border text-nowrap text-md-nowrap table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Sl No</th>
+                                                <th>Image</th>
+                                                <th>Title</th>
+                                                <th>Subtitle</th>
+                                                <th>Description</th>
+                                                <th>Details</th>
+                                                <th>Satus</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- TABLE DETAILS -->
+                                            {% load el_pagination_tags %}
+                                            {% paginate 20 instances %}
+                                            {% for instance in instances %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>
+                                                    <img class="d-block img-fluid br-5 img-td" src="{{instance.image.url}}" alt="">
+                                                </td>
+                                                <td>{{instance.title}}</td>
+                                                <td>{{instance.subtitle}}</td>
+                                                <td>
+                                                    <button class="btn btn-primary open-description-modal" type='button' data-bs-toggle="modal" data-url="{% url 'courses:course_description' pk=instance.pk %}" data-bs-target="#description">
+                                                        <i class="side-menu__icon fe fe-eye text-white"></i>
+                                                    </button>
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-dark open-crsdetail-modal" data-url="{% url 'courses:course_details' pk=instance.id %}" data-bs-toggle="modal" data-bs-target="#crsdetail">
+                                                        <i class="side-menu__icon fe fe-list text-white"></i>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    {% if instance.status == "010" %}
+                                                    <a href="javascript:void(0);"> <span class="btn btn-danger">Inactive</span></a>
+                                                    {% else %}
+                                                    <a href="javascript:void(0);"><span class="btn btn-success">Active</span></a>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <a class=" btn btn-info" href="{% url 'courses:edit_course' pk=instance.pk %}">
+                                                        <i class="side-menu__icon fe fe-edit"></i>
+                                                    </a>
+
+                                                    <a class="btn btn-danger action-button remove" data-url="{% url 'courses:course_description' pk=instance.pk %}" data-text="{{confirm_delete_message}}" data-title="Are You Sure Do You Want To Delete ?" data-message="Item Will be Deleted Permanently" href="{% url 'courses:delete_course' pk=instance.pk %}">
+                                                        <i class="side-menu__icon fe fe-trash text-white"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                            <!-- TABLE DETAILS END -->
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                {% get_pages %}
+                                <div class="card-body">
+
+                                    <!-- Django Pagination -->
+                                    <ul class="pagination">
+                                        {% if pages.has_previous %}
+                                            <li class="page-item page-prev">
+                                                <a class="page-link" href="?page={{ pages.previous_page_number }}" tabindex="-1">Prev</a>
+                                            </li>
+                                        {% endif %}
+                                
+                                        {% for page in pages.paginator.page_range %}
+                                            {% if page == pages.number %}
+                                                <li class="page-item active"><span class="page-link">{{ page }}</span></li>
+                                            {% else %}
+                                                <li class="page-item"><a class="page-link" href="?page={{ page }}">{{ page }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                
+                                        {% if pages.has_next %}
+                                            <li class="page-item page-next">
+                                                <a class="page-link" href="?page={{ pages.next_page_number }}">Next</a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                    <!-- pagination-wrapper -->
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <!-- CONTAINER END -->
+        </div>
+    </div>
+    <!--app-content close-->
+    <div class="modal  fade" id="modaldemo5" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-md modal-dialog-centered text-center" role="document">
+            <div class="modal-content ">
+
+                <div class="modal-body">
+                    <button aria-label="Close" class="btn-close position-absolute" data-bs-dismiss="modal"><span
+                            aria-hidden="true">&times;</span></button>
+                    <i class="icon icon-close fs-70 text-danger lh-1 my-5 d-inline-block"></i>
+                    <h4 class="text-danger">Are You Sure Do You Want To Delete ?</h4>
+                    <p class="mg-b-20 mg-x-20">Item Will be Deleted Permanently</p>
+                   
+                </div>
+                <div class="modal-footer justify-content-center">
+                <button class="btn btn-success">Yes</button>
+                    <button aria-label="Close" class="btn btn-danger pd-x-25" data-bs-dismiss="modal">Cancel</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MESSAGE MODAL -->
+    <div class="modal fade" id="description" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-md modal-dialog-centered text-center" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button aria-label="Close" class="btn-close position-absolute" data-bs-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="text-primary">Description</h4>
+                    <div id="description-content">
+
+                    </div> <!-- Container for dynamic content -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Detail MODAL -->
+    <div class="modal fade" id="crsdetail" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg modal-dialog-centered text-center" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button aria-label="Close" class="btn-close position-absolute" data-bs-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                    <table class="table table-striped" id="crsdetail-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button aria-label="Close" class="btn btn-danger pd-x-25" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block static %}
+{% load static %}
+<script>
+    $(document).ready(function () {
+        $(".open-description-modal").click(function () {
+            var url = $(this).attr("data-url");
+    
+            $.ajax({
+                url: url,
+                method: "GET",
+                success: function (response_data) {
+                    $("#description-content").html(response_data.description);
+                    console.log(response_data);
+                },
+                error: function () {
+                    $("#description-content").html("Failed to load content.");
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $(".open-crsdetail-modal").click(function () {
+            var url = $(this).data("url");
+    
+            $.ajax({
+                url: url,
+                method: "GET",
+                dataType: "json",
+                success: function (response_data) {
+                    if (response_data.instances) {
+                        var tableBody = $("#crsdetail-table tbody");
+                        tableBody.empty();  // Clear existing table rows
+    
+                        response_data.instances.forEach(function (item) {
+                            var row = "<tr><td>" + item.title + "</td><td>" + item.description + "</td></tr>";
+                            tableBody.append(row);
+                        });
+    
+                        $("#crsdetail").modal("show");
+                    } else {
+                        console.error("Failed to retrieve data.");
+                    }
+                },
+                error: function () {
+                    console.error("AJAX request failed.");
+                }
+            });
+        });
+    });
+    
+    
+</script>    
+{% endblock static %}
+    

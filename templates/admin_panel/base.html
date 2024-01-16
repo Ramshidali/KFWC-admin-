@@ -1,0 +1,62 @@
+!doctype html>
+<html lang="en" dir="ltr">
+{% load static %}
+<head>
+    <!-- META DATA -->
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- FAVICON -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images_ex/fav.png' %}" />
+
+    <!-- TITLE -->
+    <title>KFWC Admin | Dashboard </title>
+
+    <!-- BOOTSTRAP CSS -->
+    <link id="style" href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+
+    <!-- STYLE CSS -->
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/dark-style.css' %}" rel="stylesheet" />
+    <link href="{% static 'assets/css/transparent-style.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/skin-modes.css' %}" rel="stylesheet" />
+
+
+    <!--- FONT-ICONS CSS -->
+    <link href="{% static 'assets/css/icons.css' %}" rel="stylesheet" />
+
+    <!-- COLOR SKIN CSS -->
+    <link id="theme" rel="stylesheet" type="text/css" media="all" href="{% static 'assets/colors/color1.css' %}" />
+
+    <link href="{% static 'assets/css/style-custom.css' %}" rel="stylesheet" />
+</head>
+
+<body class="app sidebar-mini ltr light-mode">
+    <!-- PAGE -->
+    <div class="page">
+        <div class="page-main">
+
+            {% comment %} headder here {% endcomment %}
+            {% include 'admin_panel/includes/header.html'%}
+            
+            {% comment %} side bar here {% endcomment %}
+            {% include 'admin_panel/includes/sidebar.html'%}
+
+            {% block content %}
+
+            {% endblock  %} 
+            
+        </div>
+        {% comment %} footer {% endcomment %}
+        {% include 'admin_panel/includes/footer.html'%}
+
+    </div>
+    {% include 'admin_panel/includes/js.html' %}
+
+    {% block static %}
+
+    {% endblock %}
+</body>
+
+</html>

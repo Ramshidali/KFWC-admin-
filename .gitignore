@@ -1,0 +1,39 @@
+# Created by Ramshid
+
+.DS_Store
+._*
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/
+
+migrations/*.*
+*/migrations/*.*
+*/*/migrations/*.*
+
+!migrations/
+!*/migrations/__init__.py
+
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# settings
+
+.vscode
+.git_credentials
+gitpush
+settings.ini
+settings.py
+*.sock
+*.code-workspace
