@@ -6,12 +6,14 @@ from datetime import date, timedelta
 from django.urls import reverse
 from django.utils import timezone
 from django.shortcuts import redirect, render
+from django.contrib.auth.models import User,Group
+from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 from django.http.response import HttpResponseRedirect, HttpResponse
-from django.contrib.auth.models import User,Group
-from main.forms import PasswordChangeForm
+
 # third party
 #local
+from main.forms import PasswordChangeForm
 from main.decorators import role_required
 from main.functions import generate_form_errors
 
@@ -41,35 +43,52 @@ def change_password(request):
     
     if request.method == 'POST':
         form = PasswordChangeForm(request.POST)
-
-        if form.is_valid():
-            usr = User.objects.get(pk=request.user.pk)
-            usr.set_password(form.cleaned_data['password'])
-            usr.save()
-            
-            response_data = {
-                "status": "true",
-                "title": "Successful",
-                "message": "Password Updated Successfully",
-                'redirect': 'true',
-                'redirect_url': reverse("main:index")
-            }
-            status_code = "200"
+        password_matches = check_password(request.POST.get("current_password"), request.user.password)
+        
+        if password_matches:
+            print("matched")
+            if form.is_valid():
+                print("valid")
+                
+                usr = User.objects.get(pk=request.user.pk)
+                usr.set_password(form.cleaned_data['password'])
+                usr.save()
+                
+                response_data = {
+                    "status": "true",
+                    "title": "Successful",
+                    "message": "Password Updated Successfully",
+                    'redirect': 'true',
+                    'redirect_url': reverse("main:profile")
+                }
+            else:
+                print("not valid")
+                message = generate_form_errors(form, formset=False)
+                response_data = {
+                    "status": "false",
+                    "title": "Filed",
+                    "message": message,
+                }
         else:
-            message = generate_form_errors(form, formset=False)
-            status_code = "400"
+            print("not match")
             response_data = {
                 "status": "false",
-                "message": message,
+                "title": "Filed",
+                "message": "current password not match",
             }
             
-        return HttpResponse(json.dumps(response_data),status=status_code, content_type="application/json")
-        
-    else :
-        form = PasswordChangeForm()
-
-        context = {
-            'form': form,
-        }
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
     
-        return render(request,'registration/change_password.html', context)
+    
+@login_required
+def profile(request):
+    
+    instance = User.objects.get(pk=request.user.pk)
+    form = PasswordChangeForm()
+    
+    context = {
+        'instance': instance,
+        'form': form,
+    }
+
+    return render(request,'admin_panel/pages/profile.html', context)
