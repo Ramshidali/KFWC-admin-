@@ -36,14 +36,14 @@ def index(request):
   
     return render(request,'admin_panel/index.html', context)
 
-
+@login_required
 def change_password(request):
     
     if request.method == 'POST':
         form = PasswordChangeForm(request.POST)
 
         if form.is_valid():
-            usr = User.objects.get(username=form.cleaned_data['username'])
+            usr = User.objects.get(pk=request.user.pk)
             usr.set_password(form.cleaned_data['password'])
             usr.save()
             
@@ -52,7 +52,7 @@ def change_password(request):
                 "title": "Successful",
                 "message": "Password Updated Successfully",
                 'redirect': 'true',
-                'redirect_url': reverse("main:change_password_success")
+                'redirect_url': reverse("main:index")
             }
             status_code = "200"
         else:
