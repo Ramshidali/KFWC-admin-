@@ -6,11 +6,14 @@ from course_management import settings
 from main import views as general_views
 
 urlpatterns = [
-    path('',include(('main.urls'),namespace='main')),
     path('admin/', admin.site.urls),
     path('app/accounts/', include('registration.backends.default.urls')),
-    path('super-admin/main/',general_views.app,name='app'),
+    path('super-admin/',general_views.app,name='app'),
+    path('super-admin/main/',include(('main.urls'),namespace='main')), 
+    
+    
     path('summernote/', include('django_summernote.urls')),
+    
     
     path('super-admin/course/',include(('courses.urls'),namespace='courses')),
     

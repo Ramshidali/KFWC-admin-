@@ -51,14 +51,16 @@
                                 <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
                                     <i class="zmdi zmdi-email text-white" aria-hidden="true"></i>
                                 </a>
-                                <input class="input100 border-start-0 form-control ms-0" type="text" value="{{ form.username.value|default:''}}" placeholder="Enter Username">
+                                <input class="input100 border-start-0 form-control ms-0" type="text" value="{{ form.username.value|default:''}}" name="username" placeholder="Enter Username">
                             </div>
+                            {% if form.username.errors %}<span class="error">{{ form.username.errors.as_text }}</span>{% endif %}
                             <div class="wrap-input100 input-group" id="Password-toggle">
                                 <a href="javascript:void(0)" class="input-group-text bg-white text-muted">
                                     <i class="zmdi zmdi-eye text-white" aria-hidden="true"></i>
                                 </a>
                                 <input class="input100 border-start-0 form-control ms-0" name="password" type="password" value="{{ form.password.value|default:''}}" placeholder="Enter Password">
                             </div>
+                            {% if form.password.errors %}<span class="error">{{ form.password.errors.as_text }}</span>{% endif %} 
                             
                             <div class="container-login100-form-btn">
                                 <button type="submit" class="login100-form-btn btn-primary">
