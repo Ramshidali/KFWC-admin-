@@ -33,7 +33,7 @@ venv/
 .vscode
 .git_credentials
 gitpush
-settings.ini
-settings.py
+# settings.ini
+# settings.py
 *.sock
 *.code-workspace
